@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
+from fastapi.responses import JSONResponse
 from predict import predict_fault   
 from predict import predict_fault, top10_features
 
@@ -12,7 +13,7 @@ def home():
     return open("index.html").read()
 
 
-@app.post("/predict", response_class=HTMLResponse)
+@app.post("/predict")
 def predict(
     f1: float = Form(...),
     f2: float = Form(...),
@@ -30,8 +31,4 @@ def predict(
 
     result = predict_fault(data)
 
-    return f"""
-    <h2>Prediction: {result['fault']}</h2>
-    <p>Label: {result['label']}</p>
-    <a href="/">Go Back</a>
-    """
+    return JSONResponse(result)
